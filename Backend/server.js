@@ -16,11 +16,15 @@ const pool = new Pool({
 });
 
 // Middleware
-app.use(cors({
-  origin: ['http://13.233.174.185:3063', 'http://127.0.0.1:5501'],
+  app.use(cors({
+  origin: ['http://13.233.174.185:8055', 'http://13.233.174.185:8056'], // include your frontend and HR page ports
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type'],
+  credentials: true
 }));
+
+app.options('*', cors()); // enable CORS preflight response
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
