@@ -16,14 +16,12 @@ const pool = new Pool({
 });
 
 // Middleware
-  app.use(cors({
-  origin: ['http://13.233.174.185:8055', 'http://13.233.174.185:8056'], // include your frontend and HR page ports
+app.use(cors({
+  origin: ['http://13.233.174.185:8055', 'http://13.233.174.185:8056'], // frontend and HR ports
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
   credentials: true
 }));
-
-app.options('*', cors()); // enable CORS preflight response
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,7 +31,7 @@ async function initializeDatabase() {
   try {
     const client = await pool.connect();
     await client.query(`
-      drop table if exists offboarding;
+      DROP TABLE IF EXISTS offboarding;
       CREATE TABLE IF NOT EXISTS offboarding (
         id SERIAL PRIMARY KEY,
         emp_id VARCHAR(7) NOT NULL UNIQUE,
@@ -66,7 +64,6 @@ app.post('/api/offboarding/submit', async (req, res) => {
     accessCardsReturned, finalPaycheck, benefitsCleared, exitInterview, reasonForLeaving
   } = req.body;
 
-  // Validation: Ensure no undefined or missing values
   if (!empId || !name || !email || !department || !role) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
