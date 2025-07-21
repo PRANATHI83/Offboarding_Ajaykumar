@@ -5,7 +5,7 @@ services:
     image: postgres:13
     container_name: offboarding_postgres
     ports:
-      - "3810:5432"
+      - "5421:5432"
     environment:
       POSTGRES_DB: new_employee_db
       POSTGRES_USER: postgres
@@ -20,7 +20,7 @@ services:
     build: ./Backend
     container_name: offboarding_backend
     ports:
-      - "3063:3063"
+      - "3421:3421"
     depends_on:
       - postgres
     environment:
@@ -36,7 +36,7 @@ services:
     build: ./Frontend
     container_name: offboarding_frontend
     ports:
-      - "8055:80"
+      - "8041:80"
     networks:
       - offboarding_network
 
@@ -44,7 +44,7 @@ services:
     build: ./Hr_page
     container_name: offboarding_hr_page
     ports:
-      - "8056:80"
+      - "8042:80"
     networks:
       - offboarding_network
 
