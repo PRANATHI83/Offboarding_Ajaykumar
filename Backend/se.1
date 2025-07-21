@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const port = 3421;
+const port = 3063;
 
 // PostgreSQL connection
 const pool = new Pool({
@@ -17,15 +17,12 @@ const pool = new Pool({
 
 // Middleware
 app.use(cors({
-  origin: [
-    'http://52.66.53.97:8041', // Frontend
-    'http://52.66.53.97:8042', // HR page
-    'http://52.66.53.97:3421', // Backend self
-    'http://127.0.0.1:5501'       // Local dev (optional)
-  ],
+  origin: ['http://13.233.174.185:8055', 'http://13.233.174.185:8056'], // frontend and HR ports
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type'],
+  credentials: true
 }));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -34,7 +31,7 @@ async function initializeDatabase() {
   try {
     const client = await pool.connect();
     await client.query(`
-      drop table if exists offboarding;
+      DROP TABLE IF EXISTS offboarding;
       CREATE TABLE IF NOT EXISTS offboarding (
         id SERIAL PRIMARY KEY,
         emp_id VARCHAR(7) NOT NULL UNIQUE,
@@ -67,7 +64,6 @@ app.post('/api/offboarding/submit', async (req, res) => {
     accessCardsReturned, finalPaycheck, benefitsCleared, exitInterview, reasonForLeaving
   } = req.body;
 
-  // Validation: Ensure no undefined or missing values
   if (!empId || !name || !email || !department || !role) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -131,9 +127,9 @@ pool.connect()
     console.log('✅ Connected to database');
     initializeDatabase().then(() => {
       app.listen(port, () => {
-        console.log(`🚀 Server running on http://52.66.53.97:${port}`);
-        console.log(`📄 Offboarding Form: http://52.66.53.97:${port}/offboarding.html`);
-        console.log(`📊 HR Offboarding Dashboard: http://52.66.53.97:${port}/hrOffboarding.html`);
+        console.log(`🚀 Server running on http://13.233.174.185:${port}`);
+        console.log(`📄 Offboarding Form: http://13.233.174.185:${port}/offboarding.html`);
+        console.log(`📊 HR Offboarding Dashboard: http://13.233.174.185:${port}/hrOffboarding.html`);
       });
     });
   })
